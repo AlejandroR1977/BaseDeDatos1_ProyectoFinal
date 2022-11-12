@@ -5,6 +5,8 @@
 package interfaz_base.de.datos;
 
 import java.awt.Color;
+import java.sql.*;
+import java.awt.event.*;
 import javax.swing.JOptionPane;
 
 /**
@@ -12,11 +14,14 @@ import javax.swing.JOptionPane;
  * @author Alex
  */
 public class Acceso extends javax.swing.JFrame {
-
+    String URL;
+    Connection access;
     /**
      * Creates new form Interfaz
+     * @param url2
      */
-    public Acceso() {
+    public Acceso(String url2) {
+        this.URL = url2;
         initComponents();
     }
 
@@ -72,12 +77,25 @@ public class Acceso extends javax.swing.JFrame {
         Log_in.setText("Log in");
         Log_in.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Log_inMouseClicked(evt);
+                Log_in(evt);
             }
         });
+        KeyListener submit = new KeyListener(){
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == 10){
+                    Log_in(this);
+                }  
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {}
+            @Override
+            public void keyTyped(KeyEvent e) {}
+        };
 
         jPassword.setFont(new java.awt.Font("Arial Narrow", 2, 18)); // NOI18N
         jPassword.setText("jPasswordField1");
+        jPassword.addKeyListener(submit);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -140,31 +158,35 @@ public class Acceso extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 //VALIDACION DEL ACCESO Y LOG IN
-    private void Log_inMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Log_inMouseClicked
-        String Usuario = "admin1", Contraseña = "password1";
+    private void Log_in(Object evt) {//GEN-FIRST:event_Log_inMouseClicked
+        String Usuario = txtUsuario.getText();
         String Pass = new String(jPassword.getPassword());
-        if(txtUsuario.getText().equals(Usuario) && Pass.equals(Contraseña))
-            {
-                //CLASE obj = new CLASE ();
-                //obj.setVisible(true);
-                //dispose();
-            }
-        else
-            {
-             JOptionPane.showMessageDialog(this, "Usuario y/o contraseña incorrectos");
-            }
+        
+        try{
+            this.access = DriverManager.getConnection(URL,Usuario,Pass);
+            JOptionPane.showMessageDialog(this, "Conexión realizada!!\nBienvenido "+Usuario);
+            this.setVisible(false);
+            this.dispose();
+        }catch(SQLException err){
+            JOptionPane msg = new JOptionPane();
+            msg.setVisible(true);
+            msg.requestFocus();
+            msg.showMessageDialog(this, "Usuario y/o Contraseña incorrectos", "Error de conexión",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_Log_inMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        String url= "jdbc:postgresql://localhost:5432/educando";
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
+            Class.forName("org.postgresql.Driver");
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -186,7 +208,7 @@ public class Acceso extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Acceso().setVisible(true);
+                new Acceso(url).setVisible(true);
             }
         });
     }
