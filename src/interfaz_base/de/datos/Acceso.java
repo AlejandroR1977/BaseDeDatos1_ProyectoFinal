@@ -1,23 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package interfaz_base.de.datos;
 
-import java.awt.Color;
+import java.awt.*;
+import java.sql.*;
+import java.awt.event.*;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Alex
- */
 public class Acceso extends javax.swing.JFrame {
-
+    String URL;
+    Connection access;
     /**
      * Creates new form Interfaz
+     * @param url2
      */
-    public Acceso() {
+    public Acceso(String url2) {
+        this.URL = url2;
         initComponents();
+        setIconImage(getIconImage());
+    }
+    
+    @Override
+    public Image getIconImage (){
+        Image retValue = Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("Imagenes/DB-icon.png"));
+        return retValue;
     }
 
     /**
@@ -30,10 +34,7 @@ public class Acceso extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        Titulo = new javax.swing.JLabel();
         txtUsuario = new javax.swing.JTextField();
-        Contraseña = new javax.swing.JLabel();
-        Usuario = new javax.swing.JLabel();
         Log_in = new javax.swing.JButton();
         jPassword = new javax.swing.JPasswordField();
 
@@ -46,80 +47,60 @@ public class Acceso extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 0, 0));
 
-        Titulo.setBackground(new java.awt.Color(255, 255, 255));
-        Titulo.setFont(new java.awt.Font("Arial Narrow", 2, 24)); // NOI18N
-        Titulo.setForeground(new java.awt.Color(255, 255, 255));
-        Titulo.setText("Administrador de base de datos");
-
-        txtUsuario.setFont(new java.awt.Font("Arial", 2, 18)); // NOI18N
-        txtUsuario.setText("admin1");
+        txtUsuario.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
+        txtUsuario.setText("User");
         txtUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsuarioActionPerformed(evt);
             }
         });
 
-        Contraseña.setBackground(new java.awt.Color(255, 255, 255));
-        Contraseña.setFont(new java.awt.Font("Arial Narrow", 2, 18)); // NOI18N
-        Contraseña.setForeground(new java.awt.Color(255, 255, 255));
-        Contraseña.setText("Contraseña:");
-
-        Usuario.setBackground(new java.awt.Color(255, 255, 255));
-        Usuario.setFont(new java.awt.Font("Arial Narrow", 2, 18)); // NOI18N
-        Usuario.setForeground(new java.awt.Color(255, 255, 255));
-        Usuario.setText("Usuario:");
-
         Log_in.setText("Log in");
         Log_in.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Log_inMouseClicked(evt);
+                Log_in(evt);
             }
         });
+        KeyListener submit = new KeyListener(){
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == 10){
+                    Log_in(this);
+                }  
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {}
+            @Override
+            public void keyTyped(KeyEvent e) {}
+        };
 
-        jPassword.setFont(new java.awt.Font("Arial Narrow", 2, 18)); // NOI18N
-        jPassword.setText("jPasswordField1");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Usuario)
-                        .addGap(45, 45, 45)
-                        .addComponent(txtUsuario))
+                        .addGap(129, 129, 129)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(txtUsuario)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Titulo)
-                        .addGap(18, 18, 18))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(Contraseña)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(29, 29, 29)
-                                .addComponent(Log_in))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jPassword)))))
-                .addContainerGap(54, Short.MAX_VALUE))
+                        .addGap(162, 162, 162)
+                        .addComponent(Log_in)))
+                .addContainerGap(141, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(Titulo)
-                .addGap(46, 46, 46)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Usuario)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Contraseña)
-                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(42, 42, 42)
+                .addGap(125, 125, 125)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addComponent(Log_in)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -140,31 +121,35 @@ public class Acceso extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioActionPerformed
 //VALIDACION DEL ACCESO Y LOG IN
-    private void Log_inMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Log_inMouseClicked
-        String Usuario = "admin1", Contraseña = "password1";
+    private void Log_in(Object evt) {//GEN-FIRST:event_Log_inMouseClicked
+        String Usuario = txtUsuario.getText();
         String Pass = new String(jPassword.getPassword());
-        if(txtUsuario.getText().equals(Usuario) && Pass.equals(Contraseña))
-            {
-                //CLASE obj = new CLASE ();
-                //obj.setVisible(true);
-                //dispose();
-            }
-        else
-            {
-             JOptionPane.showMessageDialog(this, "Usuario y/o contraseña incorrectos");
-            }
+        
+        try{
+            this.access = DriverManager.getConnection(URL,Usuario,Pass);
+            JOptionPane.showMessageDialog(this, "Conexión realizada!!\nBienvenido "+Usuario);
+            this.setVisible(false);
+            this.dispose();
+        }catch(SQLException err){
+            JOptionPane msg = new JOptionPane();
+            msg.setVisible(true);
+            msg.requestFocus();
+            msg.showMessageDialog(this, "Usuario y/o Contraseña incorrectos", "Error de conexión",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_Log_inMouseClicked
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        String url= "jdbc:postgresql://localhost:5432/educando";
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
+            Class.forName("org.postgresql.Driver");
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -186,16 +171,13 @@ public class Acceso extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Acceso().setVisible(true);
+                new Acceso(url).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel Contraseña;
     private javax.swing.JButton Log_in;
-    private javax.swing.JLabel Titulo;
-    private javax.swing.JLabel Usuario;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPasswordField jPassword;
     private javax.swing.JTextField txtUsuario;
